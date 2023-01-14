@@ -20,3 +20,8 @@ lapply(vars, function(x) {
   filter(annual, variable==x) %>%
     saveRDS(., file.path("data", paste0("annual_", x, ".rda")))
   })
+
+# save modeling covariates
+select(annual, log_m_to_a1:ll_a23_s05000) %>%
+  names() %>%
+  saveRDS(file.path("data", "modeling_covariates.rda"))

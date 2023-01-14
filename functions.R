@@ -53,7 +53,6 @@ uk_pls <- function(modeling_data, # data for fitting pls-uk models
   lambert_proj <- "+proj=lcc +lat_1=33 +lat_2=45 +lat_0=39 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"
   ############################################################################################################
   # fit PLS model to estimate fewer components from geocovariates
-  
   pls_model <- plsr(as.formula(paste('value ~', paste(cov_names., collapse = "+"))),
                     data = modeling_data, ncomp = pls_comp_n., scale=T, center=T)
   
@@ -61,8 +60,8 @@ uk_pls <- function(modeling_data, # data for fitting pls-uk models
   modeling_data_scores <- predict(pls_model, type = "scores") %>% data.frame() %>%  
     # add location & value info
     cbind(data.frame(select(modeling_data, -all_of(cov_names.)))) %>%
-    #convert back to sf. geom is dropped otherwise
-    st_as_sf()
+    #convert to sf geom 
+    st_as_sf(coords = c('longitude', 'latitude'), crs= lat_long_crs, remove=F)
   
   new_data_scores <- predict(pls_model, type = "scores", newdata = new_data) %>% data.frame() %>%  
     # add location & value info

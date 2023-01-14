@@ -23,8 +23,8 @@
 
 # EXAMPLE OF HOW TO USE THIS PROGRAM
 # in a terminal open to the R program project directory, type: 
-# rscript 5_prediction_program.R  <modeling_data_path> <covariate_file_path> <prediction_directory> <prediction_file_format>
-## rscript 5_prediction_program.R data/annual_ns_total_conc.rda data/dr0311_grid_covars.rda Output/"UK Predictions"/grid/ns_total_conc csv
+# Rscript 1_make_predictions.R  <modeling_data_path> <covariate_file_path> <prediction_directory> <prediction_file_format>
+## Rscript 1_make_predictions.R data/annual_ns_total_conc.rda ../../HEI/Aim 3a - health inferences from diff exposure surfaces/R - hei_aim3a/data/dr0311_grid_covars.rda output/dr0311_grid rda
 
 
 ################################################################################
@@ -53,10 +53,17 @@ tic()
 ###########################################################################################
 #allow R to take input from the command line
 user_arguments <- commandArgs(trailingOnly = TRUE)
- 
+
+user_arguments <- c(file.path("data", "annual_ns_total_conc.rda"), 
+                    file.path("..", "..", "HEI", "Aim 3a - health inferences from diff exposure surfaces", "R - hei_aim3a", "data", "dr0311_grid_covars.rda"), 
+                    file.path("output", "dr0311_grid"), 
+                    'rda') 
+
+
 if (length(user_arguments) !=4) {
   print("Usage error. Enter: 1. the location of the covariate dataset for which you would like predictions, 2. where the prediction outputs should be saved, and 3. the desired prediction file fomat (csv or rda). Usage:")
-  print("rscript 5_prediction_program.R <modeling_data_path> <prediction_file_path> <prediction_directory> <prediction_file_format>")
+  print("Rscript 1_make_predictions.R  <modeling_data_path> <covariate_file_path> <prediction_directory> <prediction_file_format>")
+  print("Note. Use ' ' to include spaces in file paths")
   stop()
 }
 
@@ -90,17 +97,16 @@ if(!cov_ext %in% c("csv", "rda")) {stop("Error. Covariate file must be a CSV or 
 ###########################################################################################
 # UPLOAD MODELING DATA
 ###########################################################################################
+lat_long_crs <- 4326
+
 # modeling data is on log scale
-modeling_data <- read_rds(modeling_data_path) 
+modeling_data <- read_rds(modeling_data_path) #%>% st_as_sf(coords = c('longitude', 'latitude'), crs= lat_long_crs, remove=F)
 
 # # the covariate names that will be used in the model
-cov_names <- select(modeling_data, log_m_to_a1:last_col()) %>%
-  select(-geometry) %>%
-  names()
+cov_names <- readRDS(file.path("data", "modeling_covariates.rda"))
 
 # load a spatial file of the original monitoring area to assess spatial extrapolation later
 monitoring_area <- readRDS(file.path("data", "original", "monitoring_land_zero_water_shp.rda"))  
-lat_long_crs <- 4326
 
 ###########################################################################################
 # Blanco et al. 2022 campaign paper uses 3 PLS scores
@@ -155,6 +161,9 @@ if(has_all_covariates ==TRUE & any(has_missing_values$.) == FALSE) {print("Covar
 ###########################################################################################
 print("Generating predictions...")
 
+new_data = dt %>%
+  mutate(variable = first(modeling_data$variable))
+
 new_predictions0 <- mclapply(group_split(modeling_data, variable),
                              mc.cores = 4,
                              function(x) {
@@ -167,7 +176,8 @@ new_predictions0 <- mclapply(group_split(modeling_data, variable),
 # save the location and prediction information
 new_predictions <- new_predictions0 %>%
   # modeling data is in log scale. convert back to native scale
-  mutate(prediction = exp(prediction))
+  mutate(prediction = exp(prediction)) %>%
+  st_drop_geometry()
 
 ###########################################################################################
 # SAVE THE PREDICTIONS
