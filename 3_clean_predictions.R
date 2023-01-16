@@ -72,11 +72,11 @@ filter(predictions, variable %in% grp2_vars) %>%
 
 
 ### CHECK that things are saving correctl - can't view everything on excel. Looks good in R.
-# test <- read_csv(file.path(prediction_path, "KP", "predictions_grp1.csv"))
-# test %>% 
-#   group_by(variable) %>% 
-#   summarize(n = n(), 
-#             min=min(prediction), 
-#             mean=mean(prediction), 
-#             max=max(prediction)
-#             )
+test <- read_csv(file.path(prediction_path, "KP", "predictions_all.csv"))
+test %>%
+  group_by(variable) %>%
+  summarize(n = n(),
+            min=min(prediction),
+            mean=mean(prediction),
+            max=max(prediction)
+            )

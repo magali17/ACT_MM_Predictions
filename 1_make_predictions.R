@@ -1,3 +1,5 @@
+# Rscript 1_make_predictions.R data/annual_ns_total_conc.rda ../../../dr1008/sea_grid_100m output/nancy/ns_total_conc_sea_grid_100m csv
+
 ################################################################################
 # ABOUT THIS SCRIPT
 ################################################################################
@@ -54,11 +56,7 @@ tic()
 #allow R to take input from the command line
 user_arguments <- commandArgs(trailingOnly = TRUE)
 
-user_arguments <- c(file.path("data", "annual_ns_total_conc.rda"), 
-                    file.path("..", "..", "HEI", "Aim 3a - health inferences from diff exposure surfaces", "R - hei_aim3a", "data", "dr0311_grid_covars.rda"), 
-                    file.path("output", "dr0311_grid"), 
-                    'rda') 
-
+# user_arguments <- c("data/annual_ns_total_conc.rda", "../../../dr1008/sea_grid_100m.csv", "output/nancy/ns_total_conc_sea_grid_100m", "csv")
 
 if (length(user_arguments) !=4) {
   print("Usage error. Enter: 1. the location of the covariate dataset for which you would like predictions, 2. where the prediction outputs should be saved, and 3. the desired prediction file fomat (csv or rda). Usage:")
@@ -75,7 +73,7 @@ cov_ext <- tools::file_ext(covariate_file_path)
 #where predictions should be saved
 prediction_directory <- user_arguments[3]
 ## create the directory if it does not already exists
-if(!dir.exists(prediction_directory)) {dir.create(prediction_directory)}
+if(!dir.exists(prediction_directory)) {dir.create(prediction_directory, recursive = TRUE)}
 
 # the prediction file format (e.g., 'rda')
 prediction_file_format <- tolower(user_arguments[4])
@@ -83,14 +81,14 @@ prediction_file_format <- tolower(user_arguments[4])
 ###########################################################################################
 # SAVE USER TERMINAL INPUTS
 ###########################################################################################
-write.table(paste("Rstudio 5_prediction_program.R", paste(user_arguments, collapse = " ")), 
+write.table(paste("Rstudio 1_make_predictions.R", paste(user_arguments, collapse = " ")), 
             file = file.path(prediction_directory, "user_arguments.txt"), row.names = F, col.names = F, quote = F)
 
 ###########################################################################################
 # UPLOAD THE NEW DATASET WHERE PREDICTIONS ARE DESIRED
 ###########################################################################################
 if(cov_ext == "rda") {dt0 <- readRDS(covariate_file_path)}
-if(cov_ext == "csv") {dt0 <- read_csv(covariate_file_path)}
+if(cov_ext == "csv") {dt0 <- read.csv(covariate_file_path)}
 
 if(!cov_ext %in% c("csv", "rda")) {stop("Error. Covariate file must be a CSV or RDA file")}
 
@@ -100,7 +98,7 @@ if(!cov_ext %in% c("csv", "rda")) {stop("Error. Covariate file must be a CSV or 
 lat_long_crs <- 4326
 
 # modeling data is on log scale
-modeling_data <- read_rds(modeling_data_path) #%>% st_as_sf(coords = c('longitude', 'latitude'), crs= lat_long_crs, remove=F)
+modeling_data <- readRDS(modeling_data_path) #%>% st_as_sf(coords = c('longitude', 'latitude'), crs= lat_long_crs, remove=F)
 
 # # the covariate names that will be used in the model
 cov_names <- readRDS(file.path("data", "modeling_covariates.rda"))
