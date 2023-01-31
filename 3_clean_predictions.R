@@ -42,6 +42,10 @@ predictions0 <- lapply(var_names,
   bind_rows() 
 
 predictions <- predictions0 %>%
+  
+  # only predict at locations in monitoring area
+  filter(in_monitoring_area) %>%
+  
   mutate(
     # The start and end date is the valid period during which the model can be applied to homes. These dates match PM2.5 and NO2
     start_date = ymd("1988-01-01 "),
