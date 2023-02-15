@@ -1,4 +1,4 @@
-# Rscript 1_make_predictions.R data/annual_ns_total_conc.rda ../../../dr1008/sea_grid_100m output/nancy/ns_total_conc_sea_grid_100m csv
+# Rscript 1_make_predictions.R data/annual_ns_total_conc.rda nancy/dr1016/grid_100m_for_mm.csv nancy/predictions/ns_total_conc_grid_100m csv
 
 ################################################################################
 # ABOUT THIS SCRIPT
@@ -42,14 +42,12 @@ if (!is.null(sessionInfo()$otherPkgs)) {
 
 # load the required libraries for: plotting, modeling, spatial features, script timing
 if (!require("pacman")) {install.packages("pacman")}
-pacman::p_load(tidyverse, ggpubr, pls, gstat, sf, ggspatial, tictoc, tools,parallel)
+pacman::p_load(tidyverse, pls, gstat, sf, tools,parallel) #ggpubr, ggspatial
 
 set.seed(1)
 
 source("functions.R")
 
-# report how long script takes to run
-tic()
 ###########################################################################################
 # TAKE IN USER ARGUMENTS 
 ###########################################################################################
@@ -189,8 +187,7 @@ print(paste0("Predictions saved: ", prediction_file_name))
 
 
 ###########################################################################################
-#print the script run duration
-toc()
+ 
 
 print("PROGRAM DONE")
 
