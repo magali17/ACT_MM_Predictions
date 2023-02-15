@@ -79,7 +79,7 @@ prediction_file_format <- tolower(user_arguments[4])
 ###########################################################################################
 # SAVE USER TERMINAL INPUTS
 ###########################################################################################
-write.table(paste("Rstudio 1_make_predictions.R", paste(user_arguments, collapse = " ")), 
+write.table(paste("Rscript 1_make_predictions.R", paste(user_arguments, collapse = " ")), 
             file = file.path(prediction_directory, "user_arguments.txt"), row.names = F, col.names = F, quote = F)
 
 ###########################################################################################
@@ -171,6 +171,10 @@ new_predictions0 <- mclapply(group_split(modeling_data, variable),
 
 # save the location and prediction information
 new_predictions <- new_predictions0 %>%
+  
+  select(location_id,
+         latitude, longitude, in_monitoring_area, variable, prediction) %>%
+  
   # modeling data is in log scale. convert back to native scale
   mutate(prediction = exp(prediction)) %>%
   st_drop_geometry()
