@@ -81,6 +81,17 @@ small_ufp <- dt2 %>%
 
 dt2 <- rbind(dt2, small_ufp)
 
+
+# --> START HERE: ADD NEW BC BINS/ESTIMATES
+
+
+
+
+
+
+
+
+
 ##################################################################################################
 # merge data & winsorize median values, add temporal variables
 dt_merge <- rbind(dt1, dt2) %>%
