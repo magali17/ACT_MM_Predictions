@@ -9,3 +9,7 @@ make predictions from ACT mobile monitoring data
 ## Making Predicitons
 4. run the 1_make_predictions.R script a terminal: Rscript 1_make_predictions.R  <modeling_data_path> <covariate_file_path> <prediction_directory> <prediction_file_format>
 
+
+
+
+

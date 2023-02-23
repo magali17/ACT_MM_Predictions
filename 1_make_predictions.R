@@ -54,7 +54,9 @@ source("functions.R")
 #allow R to take input from the command line
 user_arguments <- commandArgs(trailingOnly = TRUE)
 
-# user_arguments <- c("data/annual_ns_total_conc.rda", "../../../dr1008/sea_grid_100m.csv", "output/nancy/ns_total_conc_sea_grid_100m", "csv")
+# user_arguments <- c("data/output/specific_pollutants/annual_avg_co2_umol_mol.rda",
+#                     "output/dr0311_grid/dr0311_grid_covars.csv",
+#                     "output/test/annual_avg_co2_umol_mol.rda", "rda")
 
 if (length(user_arguments) !=4) {
   print("Usage error. Enter: 1. the location of the covariate dataset for which you would like predictions, 2. where the prediction outputs should be saved, and 3. the desired prediction file fomat (csv or rda). Usage:")
@@ -93,20 +95,24 @@ if(!cov_ext %in% c("csv", "rda")) {stop("Error. Covariate file must be a CSV or 
 ###########################################################################################
 # UPLOAD MODELING DATA
 ###########################################################################################
-lat_long_crs <- 4326
+#lat_long_crs <- 4326
 
-# modeling data is on log scale
-modeling_data <- readRDS(modeling_data_path) #%>% st_as_sf(coords = c('longitude', 'latitude'), crs= lat_long_crs, remove=F)
-
-# # the covariate names that will be used in the model
-cov_names <- readRDS(file.path("data", "modeling_covariates.rda"))
+# modeling data  
+modeling_data <- readRDS(modeling_data_path) %>% #st_as_sf(coords = c('longitude', 'latitude'), crs= lat_long_crs, remove=F)
+  # will be modeling on the log scale (cannot have 0s)
+  mutate(value = ifelse(value==0, 0.001, value),
+         value = log(value))
+  
+# # # the covariate names that will be used in the model
+# cov_names <- readRDS(file.path("data", "output", "modeling_covariates.rda"))
 
 # load a spatial file of the original monitoring area to assess spatial extrapolation later
-monitoring_area <- readRDS(file.path("data", "original", "monitoring_land_zero_water_shp.rda"))  
+monitoring_area <- readRDS(file.path("data", "input", "monitoring_land_zero_water_shp.rda"))  
 
 ###########################################################################################
-# Blanco et al. 2022 campaign paper uses 3 PLS scores
-pls_comp_n <- 3
+# # Blanco et al. 2022 campaign paper uses 3 PLS scores
+# #pls_comp_n <- 3
+# pls_comp_n <- readRDS(file.path("data", "output", "objects", "pls_comp_n.rda"))
 
 ###########################################################################################
 # GENERATE NEW COVARIATES FOR THE DATASET
@@ -171,10 +177,7 @@ new_predictions0 <- mclapply(group_split(modeling_data, variable),
 
 # save the location and prediction information
 new_predictions <- new_predictions0 %>%
-  
-  select(location_id,
-         latitude, longitude, in_monitoring_area, variable, prediction) %>%
-  
+  select(location_id, latitude, longitude, in_monitoring_area, variable, prediction) %>%
   # modeling data is in log scale. convert back to native scale
   mutate(prediction = exp(prediction)) %>%
   st_drop_geometry()
