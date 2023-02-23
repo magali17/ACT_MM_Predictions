@@ -11,33 +11,32 @@ if (!is.null(sessionInfo()$otherPkgs)) {
            detach, character.only=TRUE, unload=TRUE, force=TRUE))
 }
 
-pacman::p_load( dplyr, readr, lubridate)    
+pacman::p_load(dplyr, readr, lubridate)    
 
-prediction_path <- file.path("output", #"UK Predictions", 
-                             #"cohort"
-                             "dr0311_grid", "all_predictions"
-)
+prediction_path <- file.path("output", "cohort"
+                             #"dr0311_grid", "all_predictions"
+                             )
 
 if(!dir.exists(file.path(prediction_path, "KP"))){dir.create(file.path(prediction_path, "KP"), recursive = T)}
 
 ##################################################################################################
 #  LOAD DATA
 ##################################################################################################
+
+# --> add new BC variables??
+
 new_variables <- c("pnc_20_36",
-                   "pmdisc_size",
-                   "ma200_blue_bc1", "ma200_green_bc1", "ma200_red_bc1", "ma200_uv_bc1"# "ma200_ir_bc1"
+                   "pmdisc_size" #,
+                   #"ma200_blue_bc1", "ma200_green_bc1", "ma200_red_bc1", "ma200_uv_bc1"# "ma200_ir_bc1"
                    )
   
-predictions0 <- readRDS(file.path(prediction_path, "predictions.rda")) %>%
-  filter(variable %in% new_variables)
+# predictions0 <- readRDS(file.path(prediction_path, "predictions.rda")) %>%
+#   filter(variable %in% new_variables)
 
-# var_names <- readRDS(file.path("Output", "keep_vars.rda"))
-# predictions0 <- lapply(var_names, 
-#                        function(x) {
-#                          #read_csv(file.path(prediction_path, x, "predictions.csv"), show_col_types = FALSE)
-#                          readRDS(file.path(prediction_path, x, "predictions.rda"))
-#                        }) %>%
-#   bind_rows() 
+#var_names <- readRDS(file.path("Output", "keep_vars.rda"))
+predictions0 <- lapply(new_variables,
+                       function(x) {readRDS(file.path(prediction_path, x, "predictions.rda"))}) %>%
+  bind_rows()
 
 ##################################################################################################
 #  CLEAN PREDICTIONS
@@ -60,28 +59,40 @@ predictions <- predictions0 %>%
          #variable,
          prediction)
 
-saveRDS(predictions, file.path(prediction_path, "KP", "predictions_all.rda"))
-write_csv(predictions, file.path(prediction_path, "KP", "predictions_all.csv"))
+saveRDS(predictions, file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".rda")))
+write_csv(predictions, file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".csv")))
 
 ##################################################################################################
 #  QC CHECK
 ##################################################################################################
-
 ### CHECK that things are saving correctl - can't view everything on excel. Looks good in R.
-test <- read_csv(file.path(prediction_path, "KP", "predictions_all.csv"))
-test %>%
-  group_by(variable) %>%
-  summarize(n = n(),
-            min=min(prediction),
-            mean=mean(prediction),
-            max=max(prediction)
-            )
 
-# 1. prediction histograms 
-test %>%
-  ggplot(., aes(x=prediction)) + 
-  facet_wrap(~variable, scales = "free") + 
-  geom_histogram(bins=30) +
-  labs(title = "Prediction Histograms")
+check <- TRUE
+
+if(check==TRUE) {
+  predictions <- readRDS(file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".rda")))
+  
+  t <- predictions %>%
+    group_by(model) %>%
+    summarize(n = n(),
+              min=min(prediction),
+              mean=mean(prediction),
+              max=max(prediction))
+  
+  print(t)
+  
+  # 1. prediction histograms 
+  pacman::p_load(ggplot2)
+  
+  predictions %>%
+    ggplot(., aes(x=prediction)) + 
+    facet_wrap(~model, scales = "free") + 
+    geom_histogram(bins=30) +
+    labs(title = "Prediction Histograms")
+  
+  
+}
+
+
 
 

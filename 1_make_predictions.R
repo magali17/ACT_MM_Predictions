@@ -1,4 +1,4 @@
-# Rscript 1_make_predictions.R data/annual_ns_total_conc.rda nancy/dr1016/grid_100m_for_mm.csv nancy/predictions/ns_total_conc_grid_100m csv
+# Rscript 1_make_predictions.R data/output/specific_pollutants/annual_avg_pnc_20_36.rda output/cohort/dr0357_cohort_covar_20220404.csv output/cohort/pnc_20_36 rda
 
 ################################################################################
 # ABOUT THIS SCRIPT
@@ -167,7 +167,7 @@ new_data = dt %>%
   mutate(variable = first(modeling_data$variable))
 
 new_predictions0 <- mclapply(group_split(modeling_data, variable),
-                             mc.cores = 4,
+                             mc.cores = 1, #4,
                              function(x) {
                                set.seed(1)
                                temp <- dt %>%
