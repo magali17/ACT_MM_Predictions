@@ -76,3 +76,12 @@ test %>%
             mean=mean(prediction),
             max=max(prediction)
             )
+
+# 1. prediction histograms 
+test %>%
+  ggplot(., aes(x=prediction)) + 
+  facet_wrap(~variable, scales = "free") + 
+  geom_histogram(bins=30) +
+  labs(title = "Prediction Histograms")
+
+
