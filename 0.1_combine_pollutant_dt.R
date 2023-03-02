@@ -104,12 +104,12 @@ annual <- dt_merge %>%
   group_by(variable, location) %>%
   summarize( value = mean(value)) 
 
-saveRDS(annual, file.path("data", "Output", "annual_avgs.rda"))
+saveRDS(annual, file.path("data", "output", "annual_avgs.rda"))
 
 ##################################################################################################
 # cleaned covariates used in modeling for all 309 sites
 ##################################################################################################
-fp <- file.path("~", "OneDrive - UW", "Documents", "Post Doc", "Study Projects", "ACT TRAP MM", "ACT HEI Supp", "act_hei_aim1a", "Output")
+fp <- file.path("data", "input")
 
 cov_train <- readRDS(file.path(fp, "mm_cov_train_set.rda"))
 cov_test <- readRDS(file.path(fp, "mm_cov_test_set.rda")) %>%
@@ -117,7 +117,7 @@ cov_test <- readRDS(file.path(fp, "mm_cov_test_set.rda")) %>%
 
 modeling_covariates <- rbind(cov_train, cov_test)
 
-saveRDS(modeling_covariates, file.path("data", "Output", "modeling_geocovariates.rda"))
+saveRDS(modeling_covariates, file.path("data", "output", "modeling_geocovariates.rda"))
 
 
 
