@@ -23,11 +23,9 @@ if(!dir.exists(file.path(prediction_path, "KP"))){dir.create(file.path(predictio
 #  LOAD DATA
 ##################################################################################################
 
-# --> add new BC variables??
-
 new_variables <- c("pnc_20_36",
-                   "pmdisc_size" #,
-                   #"ma200_blue_bc1", "ma200_green_bc1", "ma200_red_bc1", "ma200_uv_bc1"# "ma200_ir_bc1"
+                   "pmdisc_size",
+                   "ma200_blue_bc1", "ma200_green_bc1", "ma200_red_bc1", "ma200_uv_bc1"# "ma200_ir_bc1"
                    )
   
 # predictions0 <- readRDS(file.path(prediction_path, "predictions.rda")) %>%
@@ -53,11 +51,8 @@ predictions <- predictions0 %>%
     start_date = ymd("1988-01-01 "),
     end_date = ymd("2021-07-09 "),
     model = variable,
-    #model = paste0("mb_", campaign_id)
   ) %>%
-  select(location_id, start_date, end_date, model, 
-         #variable,
-         prediction)
+  select(location_id, start_date, end_date, model, prediction)
 
 saveRDS(predictions, file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".rda")))
 write_csv(predictions, file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".csv")))

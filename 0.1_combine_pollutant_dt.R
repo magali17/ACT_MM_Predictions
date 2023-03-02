@@ -44,7 +44,7 @@ dt1_vars <- unique(dt1$variable)
 correct_times <- distinct(dt1, time, stop_id)
 
 ##################################################################################################
-# new variables (Dustin)
+# new variables (Dustin): other MA200 bins, NS bins, discmini median size
 dt2 <- read_csv(file.path("data", "input", "tr0090_averaged_stops.csv")) %>%
   select(-c(primary_instrument, mean_value)) %>%
   rename(value = median_value) %>%
@@ -62,13 +62,11 @@ dt2 <- read_csv(file.path("data", "input", "tr0090_averaged_stops.csv")) %>%
   filter(!variable %in% dt1_vars) %>%
   select(-time)  
 
-
-
 # fix bin times
 dt2 <-left_join(correct_times, dt2, by="stop_id") %>%
   drop_na(value)
 
-
+####################################
 # add 10_100 bin counts
 small_bins <- paste0("ns_", c(15.4, 20.5, 27.4, 36.5, 48.7, 64.9, 86.6))
 
@@ -80,17 +78,6 @@ small_ufp <- dt2 %>%
   ungroup()
 
 dt2 <- rbind(dt2, small_ufp)
-
-
-# --> START HERE: ADD NEW BC BINS/ESTIMATES
-
-
-
-
-
-
-
-
 
 ##################################################################################################
 # merge data & winsorize median values, add temporal variables

@@ -12,11 +12,7 @@ if (!is.null(sessionInfo()$otherPkgs)) {
            detach, character.only=TRUE, unload=TRUE, force=TRUE))
 }
 
-pacman::p_load(#knitr, kableExtra,
-               tidyverse,
-               pls, gstat, #variogram()
-               sf, parallel
-               )
+pacman::p_load(tidyverse, pls, gstat, sf, parallel)
 
 set.seed(1)
 
