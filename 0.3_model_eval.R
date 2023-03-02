@@ -29,7 +29,10 @@ if(!dir.exists(file.path("data", "output", "objects"))) {dir.create(file.path("d
 ###########################################################################################
 annual <- readRDS(file.path("data", "output", "annual_avgs_and_cov.rda")) %>%
   # folds for CV
-  add_random_fold()
+  add_random_fold() %>%
+  # will be modeling on the log scale (cannot have 0s)
+  mutate(value = ifelse(value==0, 0.001, value),
+         value = log(value)) 
 
 # # # from Blanco 2022 ACT campaign paper
 # pls_comp_n <- 3
@@ -50,7 +53,10 @@ cv_predictions <- mclapply(group_split(annual, variable),
                            ) %>%
   bind_rows() %>%
   mutate(out_of_sample = "cross-validation") %>%
-  select(all_of(common_names))
+  select(all_of(common_names)) %>%
+  # put values & predictions back on the native scale before evaluating
+  mutate(value = exp(value),
+         prediction = exp(prediction))
 
 ##################################################################################################
 # MODEL EVALUATION

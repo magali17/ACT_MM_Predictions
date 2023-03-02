@@ -1,4 +1,4 @@
-# Rscript 1_make_predictions.R data/output/specific_pollutants/annual_avg_pnc_20_36.rda output/cohort/dr0357_cohort_covar_20220404.csv output/cohort/pnc_20_36 rda
+# Rscript 1_make_predictions.R data/output/specific_pollutants/annual_avg_blue_bc1.rda output/cohort/dr0357_cohort_covar_20220404.csv output/cohort/blue_bc1 rda
 
 ################################################################################
 # ABOUT THIS SCRIPT
