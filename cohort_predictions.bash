@@ -1,8 +1,8 @@
-script generates cohort predictions & saves them in the correct format for KPRI
-#bash B_cohort_predictions.bash
+# script generates cohort predictions & saves them in the correct format for KPRI
+#bash cohort_predictions.bash
 
 #############################################################################################
-NanoScan bins
+# NanoScan bins
 Rscript 1_make_predictions.R data/output/specific_pollutants/annual_avg_ns_10_100.rda data/dr0357_cohort_covar_20220404_in_mm_area.rda output/cohort/ns_10_100 rda
 Rscript 1_make_predictions.R data/output/specific_pollutants/annual_avg_ns_11.5.rda data/dr0357_cohort_covar_20220404_in_mm_area.rda output/cohort/ns_11.5 rda
 Rscript 1_make_predictions.R data/output/specific_pollutants/annual_avg_ns_15.4.rda data/dr0357_cohort_covar_20220404_in_mm_area.rda output/cohort/ns_15.4 rda
