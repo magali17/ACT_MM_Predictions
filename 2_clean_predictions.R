@@ -34,7 +34,7 @@ new_variables <- c("pnc_20_36",
 # predictions0 <- readRDS(file.path(prediction_path, "predictions.rda")) %>%
 #   filter(variable %in% new_variables)
 
-#var_names <- readRDS(file.path("Output", "keep_vars.rda"))
+message("loading individual model/pollutant predictions")
 predictions0 <- lapply(new_variables,
                        function(x) {readRDS(file.path(prediction_path, x, "predictions.rda"))}) %>%
   bind_rows()
@@ -57,6 +57,9 @@ predictions <- predictions0 %>%
   ) %>%
   select(location_id, start_date, end_date, model, prediction)
 
+message("saving predictions under:")
+print(file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date())))
+      
 saveRDS(predictions, file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".rda")))
 write_csv(predictions, file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".csv")))
 
