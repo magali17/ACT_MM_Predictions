@@ -82,16 +82,16 @@ if(check==TRUE) {
   
   print(t)
   
-  # 1. prediction histograms 
-  pacman::p_load(ggplot2)
-  
-  predictions %>%
-    ggplot(., aes(x=prediction)) + 
-    facet_wrap(~model, scales = "free") + 
-    geom_histogram(bins=30) +
-    labs(title = "Prediction Histograms")
-  
-  
+  # # 1. prediction histograms
+  # pacman::p_load(ggplot2)
+  # 
+  # predictions %>%
+  #   ggplot(., aes(x=prediction)) +
+  #   facet_wrap(~model, scales = "free") +
+  #   geom_histogram(bins=30) +
+  #   labs(title = "Prediction Histograms")
+  # 
+  # #ggsave(file.path(file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".png"))))
 }
 
 
