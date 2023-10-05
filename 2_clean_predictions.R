@@ -11,7 +11,7 @@ if (!is.null(sessionInfo()$otherPkgs)) {
            detach, character.only=TRUE, unload=TRUE, force=TRUE))
 }
 
-pacman::p_load(dplyr, readr, lubridate)    
+pacman::p_load(dplyr, readr, lubridate, tidyverse)    
 
 prediction_path <- file.path("output", "cohort"
                              #"dr0311_grid",  
@@ -25,10 +25,10 @@ if(!dir.exists(file.path(prediction_path, "KP"))){dir.create(file.path(predictio
 
 new_variables <- c("pnc_20_36",
                    "pmdisc_size",
-                   "ma200_blue_bc1", "ma200_green_bc1", "ma200_red_bc1", "ma200_uv_bc1"#, # "ma200_ir_bc1"
+                   "ma200_blue_bc1", "ma200_green_bc1", "ma200_red_bc1", "ma200_uv_bc1", # "ma200_ir_bc1"
                    
                    #NS bins, added 10/4/23
-                   #"ns_10_100", "ns_11.5", "ns_115.5", "ns_15.4", "ns_154.0", "ns_20.5", "ns_27.4", "ns_36.5", "ns_48.7", "ns_64.9", "ns_86.6"
+                   "ns_10_100", "ns_11.5", "ns_115.5", "ns_15.4", "ns_154.0", "ns_20.5", "ns_27.4", "ns_36.5", "ns_48.7", "ns_64.9", "ns_86.6"
                    )
   
 # predictions0 <- readRDS(file.path(prediction_path, "predictions.rda")) %>%
