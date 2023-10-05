@@ -82,7 +82,7 @@ add_random_fold <- function(df, k.=k) {
 ###########################################################################################
 # default settings for functions
 cov_names <- readRDS(file.path("data", "output", "modeling_covariates.rda"))
-pls_comp_n <- readRDS(file.path("data", "output", "objects", "pls_comp_n.rda"))
+pls_comp_n <- readRDS(file.path("data", "output", "objects", "pls_comp_n.rda")) #3
 lat_long_crs <- 4326  
 
 # modeling_data=group_split(annual, variable)[[1]] %>% filter(random_fold !=1)

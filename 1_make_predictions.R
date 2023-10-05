@@ -59,7 +59,8 @@ user_arguments <- commandArgs(trailingOnly = TRUE)
 #                     "output/test/annual_avg_co2_umol_mol.rda", "rda")
 
 if (length(user_arguments) !=4) {
-  print("Usage error. Enter: 1. the location of the covariate dataset for which you would like predictions, 2. where the prediction outputs should be saved, and 3. the desired prediction file fomat (csv or rda). Usage:")
+  #print("Usage error. Enter: 1. the location of the covariate dataset for which you would like predictions, 2. where the prediction outputs should be saved, and 3. the desired prediction file fomat (csv or rda). Usage:")
+  print("usage error. Use format:")
   print("Rscript 1_make_predictions.R  <modeling_data_path> <covariate_file_path> <prediction_directory> <prediction_file_format>")
   print("Note. Use ' ' to include spaces in file paths")
   stop()

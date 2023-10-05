@@ -97,6 +97,7 @@ dt_merge <- rbind(dt1, dt2) %>%
   arrange(time) 
 
 saveRDS(dt_merge, file.path("data", "output", "winsorized_medians.rda"))
+write.csv(dt_merge, file.path("data", "output", "winsorized_medians.csv"), row.names = F)
 ##################################################################################################
 # calculate annual averages
 ##################################################################################################
@@ -105,6 +106,7 @@ annual <- dt_merge %>%
   summarize( value = mean(value)) 
 
 saveRDS(annual, file.path("data", "output", "annual_avgs.rda"))
+write.csv(annual, file.path("data", "output", "annual_avgs.csv"), row.names = F)
 
 ##################################################################################################
 # cleaned covariates used in modeling for all 309 sites
@@ -118,6 +120,6 @@ cov_test <- readRDS(file.path(fp, "mm_cov_test_set.rda")) %>%
 modeling_covariates <- rbind(cov_train, cov_test)
 
 saveRDS(modeling_covariates, file.path("data", "output", "modeling_geocovariates.rda"))
-
+write.csv(modeling_covariates, file.path("data", "output", "modeling_geocovariates.csv"), row.names = F)
 
 
