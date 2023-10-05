@@ -68,7 +68,7 @@ write_csv(predictions, file.path(prediction_path, "KP", paste0("predictions_addi
 ##################################################################################################
 ### CHECK that things are saving correctl - can't view everything on excel. Looks good in R.
 
-check <- TRUE
+check <- FALSE
 
 if(check==TRUE) {
   predictions <- readRDS(file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".rda")))
