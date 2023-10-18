@@ -1,4 +1,3 @@
-# Rscript 1_make_predictions.R data/output/specific_pollutants/annual_avg_blue_bc1.rda output/cohort/dr0357_cohort_covar_20220404.csv output/cohort/blue_bc1 rda
 
 ################################################################################
 # ABOUT THIS SCRIPT
@@ -54,12 +53,7 @@ source("functions.R")
 #allow R to take input from the command line
 user_arguments <- commandArgs(trailingOnly = TRUE)
 
-# user_arguments <- c("data/output/specific_pollutants/annual_avg_co2_umol_mol.rda",
-#                     "output/dr0311_grid/dr0311_grid_covars.csv",
-#                     "output/test/annual_avg_co2_umol_mol.rda", "rda")
-
 if (length(user_arguments) !=4) {
-  #print("Usage error. Enter: 1. the location of the covariate dataset for which you would like predictions, 2. where the prediction outputs should be saved, and 3. the desired prediction file fomat (csv or rda). Usage:")
   print("usage error. Use format:")
   print("Rscript 1_make_predictions.R  <modeling_data_path> <covariate_file_path> <prediction_directory> <prediction_file_format>")
   print("Note. Use ' ' to include spaces in file paths")
@@ -82,16 +76,16 @@ prediction_file_format <- tolower(user_arguments[4])
 ###########################################################################################
 # SAVE USER TERMINAL INPUTS
 ###########################################################################################
-write.table(paste("Rscript 1_make_predictions.R", paste(user_arguments, collapse = " ")), 
+write.table(paste("#command used to generate predictions: \nRscript 1_make_predictions.R", paste(user_arguments, collapse = " ")), 
             file = file.path(prediction_directory, "user_arguments.txt"), row.names = F, col.names = F, quote = F)
 
 ###########################################################################################
 # UPLOAD THE NEW DATASET WHERE PREDICTIONS ARE DESIRED
 ###########################################################################################
 if(cov_ext == "rda") {dt0 <- readRDS(covariate_file_path)}
-if(cov_ext == "csv") {dt0 <- read.csv(covariate_file_path)}
+if(cov_ext %in% c("csv", "txt")) {dt0 <- read.csv(covariate_file_path)}
 
-if(!cov_ext %in% c("csv", "rda")) {stop("Error. Covariate file must be a CSV or RDA file")}
+if(!cov_ext %in% c("csv", "rda", "txt")) {stop("Error. Covariate file must be a .CSV, .txt or .rda file")}
 
 ###########################################################################################
 # UPLOAD MODELING DATA
