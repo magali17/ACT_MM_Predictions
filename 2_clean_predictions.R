@@ -15,7 +15,7 @@ pacman::p_load(dplyr, readr, lubridate, tidyverse)
 
 prediction_path <- file.path("output", "cohort"
                              #"dr0311_grid",  
-                             )
+)
 
 if(!dir.exists(file.path(prediction_path, "KP"))){dir.create(file.path(prediction_path, "KP"), recursive = T)}
 
@@ -29,8 +29,8 @@ new_variables <- c("pnc_20_36",
                    
                    #NS bins, added 10/4/23
                    "ns_10_100", "ns_11.5", "ns_115.5", "ns_15.4", "ns_154.0", "ns_20.5", "ns_27.4", "ns_36.5", "ns_48.7", "ns_64.9", "ns_86.6"
-                   )
-  
+)
+
 # predictions0 <- readRDS(file.path(prediction_path, "predictions.rda")) %>%
 #   filter(variable %in% new_variables)
 
@@ -59,7 +59,7 @@ predictions <- predictions0 %>%
 
 message("saving predictions under:")
 print(file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date())))
-      
+
 saveRDS(predictions, file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".rda")))
 write_csv(predictions, file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".csv")))
 
@@ -82,18 +82,17 @@ if(check==TRUE) {
   
   print(t)
   
-  # 1. prediction histograms 
-  pacman::p_load(ggplot2)
-  
-  predictions %>%
-    ggplot(., aes(x=prediction)) + 
-    facet_wrap(~model, scales = "free") + 
-    geom_histogram(bins=30) +
-    labs(title = "Prediction Histograms")
-  
-  
+  # # 1. prediction histograms
+  # pacman::p_load(ggplot2)
+  # 
+  # predictions %>%
+  #   ggplot(., aes(x=prediction)) +
+  #   facet_wrap(~model, scales = "free") +
+  #   geom_histogram(bins=30) +
+  #   labs(title = "Prediction Histograms")
+  # 
+  # #ggsave(file.path(file.path(prediction_path, "KP", paste0("predictions_additional_vars_", Sys.Date(),".png"))))
 }
-
 
 
 
